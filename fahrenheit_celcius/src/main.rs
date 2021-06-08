@@ -4,14 +4,15 @@ fn main() {
     let mut scale = String::new();
     let mut temperature = String::new();
 
-    while scale.trim() != "C" && scale.trim() != "F"{
         println!("Please input C if your number is in Celcius and F if your number is in Fahrenheit.");
 
-        io::stdin()
-            .read_line(&mut scale)
-            .expect("Couldn't parse whether it was Celcius or Fahrenheit");
-
-    }
+        match io::stdin().read_line(&mut scale){
+            Ok(_) => {}
+            Err(_) => {
+                println!("Couldn't parse the scale.");
+                return;
+            }
+        }
 
     println!("Please input your temperature (as an integer).");
 
@@ -19,14 +20,25 @@ fn main() {
         .read_line(&mut temperature)
         .expect("Couldn't parse the temperature");
 
-    //let temperature: i32 = match temperature.trim().parse() {
-    //    Ok(num) => num,
-    //    Err(_) => continue,
-    //};
+    let temperature: f32 = match temperature.trim().parse() {
+        Ok(num) => num,
+        Err(_) => {println!("Couldn't parse the temperature");
+                    return;}
+    };
 
     if scale.trim() == "C"{
-        println!("Celcius");
+        println!("{}° Celcius are equivalent to {}° Fahrenheit.", temperature, ctof(temperature));
+    }else if scale.trim() == "F"{
+        println!("{}° Fahrenheit are equivalent to {}° Celcius.", temperature, ftoc(temperature));
     }else{
-        println!("Fahrenheit");
+        println!("Not a valid scale.");
     }
+}
+
+fn ctof(t: f32) -> f32{
+    t*1.8 + 32.0
+}
+
+fn ftoc(t: f32) -> f32{
+    (t-32.0)/1.8
 }
